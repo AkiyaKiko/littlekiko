@@ -1,5 +1,5 @@
 from telebot import util
-from Modules import bot
+from Modules import bot,keyWordsDetection,command,welcome
 
 
 
