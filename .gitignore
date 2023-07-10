@@ -1,2 +1,2 @@
-*git/
-/Modules/__pycache__/*
+.git/
+/Modules/__pycache__/
