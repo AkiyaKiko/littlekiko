@@ -20,3 +20,6 @@ def haveAGoodnight(message):
 def supportSub(message):
     bot.reply_to(message, '啊哈，以下是免费的订阅链接哦：https://sub.sharecentre.online/sub 公益链接提供者：@ShareCentrePro')
 
+
+
+
