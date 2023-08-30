@@ -131,7 +131,7 @@ def chat_m(message: types.ChatMemberUpdated):
     new = message.new_chat_member
     if new.status == "member":
 
-        bot.send_message(message.chat.id,"Hello {name}!".format(name=new.user.first_name)) # Welcome message
+        bot.send_message(message.chat.id,"Hello @{name}!".format(name=new.user.first_name)) # Welcome message
         bot.send_message(message.chat.id, "@{}你好,请完成验证，否则30秒后将踢出群组".format(new.user.username), reply_markup=gen_markup())
         bot.restrict_chat_member(message.chat.id, new.user.id, until_date=99999999, can_send_messages=False)
 
@@ -143,8 +143,8 @@ def chat_m(message: types.ChatMemberUpdated):
         while countdownThread.is_alive():
             result = verify(new.user)
             if result == True:
-                bot.restrict_chat_member(message.chat.id, new.user.id, can_send_messages=True)
-                bot.send_message(message.chat.id,"@{}已完成验证，欢迎新成员!".format(new.user.username)) # Welcome message
+                bot.restrict_chat_member(message.chat.id, new.user.id, can_send_messages=True, can_send_media_messages=True)
+                bot.send_message(message.chat.id,"@{}已完成验证，欢迎新成员!".format(new.user.first_name)) # Welcome message
                 Running = False
                 callback_init() #verification completed, initialize callback
                 break
@@ -155,7 +155,7 @@ def chat_m(message: types.ChatMemberUpdated):
         #Timeout Ban
         if timeout == True:
             bot.ban_chat_member(message.chat.id, new.user.id)
-            bot.send_message(message.chat.id,"@{}验证超时，已被ban!".format(new.user.username))
+            bot.send_message(message.chat.id,"@{}验证超时，已被ban!".format(new.user.first_name))
         
         #final_initial
         if not countdownThread.is_alive():
