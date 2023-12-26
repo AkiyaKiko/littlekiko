@@ -5,6 +5,7 @@ from telebot import types
 from Modules import autoPicture as ap
 from telebot.util import quick_markup
 from telebot.util import user_link
+from telebot import asyncio_helper
 from telebot.async_telebot import AsyncTeleBot
 import asyncio
 
@@ -153,22 +154,26 @@ async def chat_m(message: types.ChatMemberUpdated):
     if new.status == "member":
 
         # bot.send_message(message.chat.id,"Hello @{name}!".format(name=new.user.first_name)) # Welcome message
-        await bot.send_message(message.chat.id, user_link(message.from_user)+"你好,请完成验证，否则永久禁言 Hello, please finish the verification", reply_markup=gen_markup(), parse_mode='HTML')
+        send_ver = await bot.send_message(message.chat.id, user_link(message.from_user)+"你好,请完成验证，否则永久禁言 Hello, please finish the verification", reply_markup=gen_markup(), parse_mode='HTML')
         await bot.restrict_chat_member(message.chat.id, new.user.id, until_date=999999999999, can_send_messages=False, can_send_media_messages=False)
         for cd in range(0,3000):
             result = verify(new.user)
             if result == True and cd != 2999:
-                await bot.restrict_chat_member(message.chat.id, new.user.id, can_send_messages=True, can_send_media_messages=True)
+                await bot.restrict_chat_member(message.chat.id, new.user.id, can_send_messages=True, can_send_media_messages=True, can_send_other_messages=True)
                 send_res = await bot.send_message(message.chat.id, user_link(message.from_user)+"已完成验证，欢迎新成员! Verfied! Welcome!", parse_mode='HTML')
                 await asyncio.sleep(15)
+                await bot.delete_message(chat_id = message.chat.id,message_id = send_ver.message_id)
+                await asyncio.sleep(0.5)
                 await bot.delete_message(chat_id = message.chat.id,message_id = send_res.message_id)
                 break
             elif result != True and cd != 2999:
                 await asyncio.sleep(0.01)
             elif cd == 2999:
-                await bot.ban_chat_member(user_id=new.user.id)
+                await bot.ban_chat_member(chat_id = message.chat.id,user_id=new.user.id)
                 send_res = await bot.send_message(message.chat.id, user_link(message.from_user)+"未完成验证，已Ban! TimeOut! Ban!", parse_mode='HTML')
                 await asyncio.sleep(15)
+                await bot.delete_message(chat_id = message.chat.id,message_id = send_ver.message_id)
+                await asyncio.sleep(0.5)
                 await bot.delete_message(chat_id = message.chat.id,message_id = send_res.message_id)
                 break
 
@@ -206,7 +211,7 @@ async def chat_m(message: types.ChatMemberUpdated):
 # logger = AsyncTeleBot.logger
 # AsyncTeleBot.logger.setLevel(logging.DEBUG)
 # bot.infinity_polling(allowed_updates=util.update_types)
-asyncio.run(bot.polling())
+asyncio.run(bot.polling(allowed_updates=util.update_types))
 
 
     
