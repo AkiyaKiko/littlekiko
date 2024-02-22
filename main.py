@@ -170,11 +170,11 @@ async def chat_m(message: types.ChatMemberUpdated):
                 await asyncio.sleep(0.01)
             elif cd == 2999:
                 await bot.ban_chat_member(chat_id = message.chat.id,user_id=new.user.id)
-                send_res = await bot.send_message(message.chat.id, user_link(message.from_user)+"未完成验证，已Ban! TimeOut! Ban!", parse_mode='HTML')
+                send_res = await bot.send_message(message.chat.id, user_link(message.from_user)+"未完成验证，已Ban!\nBanned becasue of Verification TimeOut!\n请私聊管理员处理!\nPlease PM Admins to remove the restriction!", parse_mode='HTML')
                 await asyncio.sleep(15)
                 await bot.delete_message(chat_id = message.chat.id,message_id = send_ver.message_id)
-                await asyncio.sleep(0.5)
-                await bot.delete_message(chat_id = message.chat.id,message_id = send_res.message_id)
+                # await asyncio.sleep(0.5)
+                # await bot.delete_message(chat_id = message.chat.id,message_id = send_res.message_id)
                 break
 
         # #Countdown_thread
