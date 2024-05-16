@@ -23,12 +23,6 @@ call_back_query_data = [None]
 call_back_query_user = [None]
 
 ################################################command########################################################
-#my test module, if needed, discomment it
-# @bot.message_handler(commands=['test'])
-# def send_testfunc(message : types.Message):
-
-#     bot.send_photo(message.chat.id, "https://floral-disk-7293.nyancatda.workers.dev/img-original/img/2022/08/07/01/10/25/100287825_p1.png")
-
 @bot.message_handler(commands=['start','help'])
 async def send_welcome(message : types.Message):
     r_res = await bot.reply_to(message, "你好, "+user_link(message.from_user)+"！我是littlekiko！我的主人是"+"<a href='tg://user?id=5374926976'>秋谷</a>", parse_mode='HTML')
@@ -94,10 +88,11 @@ async def repeat_reply(message):
 async def haveAGoodnight(message):
     await bot.reply_to(message, '晚安！')
 
+#OUTDATED!
 #Subscription
-@bot.message_handler(regexp='订阅')
-async def supportSub(message):
-    await bot.reply_to(message, '啊哈，以下是免费的订阅链接哦：https://sub.sharecentre.online/sub 公益链接提供者：@ShareCentrePro')
+# @bot.message_handler(regexp='订阅')
+# async def supportSub(message):
+#     await bot.reply_to(message, '啊哈，以下是免费的订阅链接哦：https://sub.sharecentre.online/sub 公益链接提供者：@ShareCentrePro')
 
 ################################################welcome########################################################
 #generate inline keyboard
@@ -115,28 +110,6 @@ async def callback_query(call : types.CallbackQuery):
     call_back_query_data[0] = call.data
     call_back_query_user[0] = call.from_user
 
-# #verification countdown
-# def countdown():
-#     for count in range(0,30):
-#         global Running
-#         global timeout
-#         if Running == False:
-#             break
-#         elif Running == True and timeout == False:
-#             asyncio.sleep(1)
-#         elif Running == True and count == 29:
-#             timeout = True
-# #initialize Running and timeout
-# def countdown_init():
-#     global Running,timeout
-#     Running = True
-#     timeout = False
-
-# #initialize the callback data and user
-# def callback_init():
-#     global call_back_query_data,call_back_query_user
-#     call_back_query_data = [None]
-#     call_back_query_user = [None]
         
 #verify the click callback
 def verify(new_user : types.User):
@@ -170,42 +143,12 @@ async def chat_m(message: types.ChatMemberUpdated):
                 await asyncio.sleep(0.01)
             elif cd == 2999:
                 await bot.ban_chat_member(chat_id = message.chat.id,user_id=new.user.id)
-                send_res = await bot.send_message(message.chat.id, user_link(message.from_user)+"未完成验证，已Ban!\nBanned becasue of Verification TimeOut!\n请私聊管理员处理!\nPlease PM Admins to remove the restriction!", parse_mode='HTML')
+                vFailedMessage = "未完成验证，已Ban!\nBanned becasue of Verification TimeOut!\n请私聊管理员处理!\nPlease PM Admins to remove the restriction!"
+                send_res = await bot.send_message(message.chat.id, user_link(message.from_user)+vFailedMessage, parse_mode='HTML')
+                await bot.send_message(new.user.id, user_link(message.from_user)+vFailedMessage, parse_mode='HTML')
                 await asyncio.sleep(15)
                 await bot.delete_message(chat_id = message.chat.id,message_id = send_ver.message_id)
-                # await asyncio.sleep(0.5)
-                # await bot.delete_message(chat_id = message.chat.id,message_id = send_res.message_id)
                 break
-
-        # #Countdown_thread
-        # countdownThread = threading.Thread(target=countdown)
-        # countdownThread.start()
-        
-        # #Verification_complete
-        # while countdownThread.is_alive():
-        #     result = verify(new.user)
-        #     if result == True:
-        #         await bot.restrict_chat_member(message.chat.id, new.user.id, can_send_messages=True, can_send_media_messages=True)
-        #         await bot.send_message(message.chat.id, user_link(message.from_user)+"已完成验证，欢迎新成员!", parse_mode='HTML') # Welcome message
-        #         Running = False
-        #         callback_init() #verification completed, initialize callback
-        #         break
-
-        #     else:
-        #         continue
-
-        # #Timeout Ban
-        # if timeout == True:
-        #     bot.send_message(message.chat.id, user_link(message.from_user)+"验证超时，已被ban!", parse_mode='HTML')
-        #     bot.kick_chat_member(message.chat.id, new.user.id)
-            
-        
-        # #final_initial
-        # if not countdownThread.is_alive():
-        #     countdown_init()
-                
-
-
 
 ################################################start########################################################
 # logger = AsyncTeleBot.logger
