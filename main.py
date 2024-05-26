@@ -145,7 +145,7 @@ async def chat_m(message: types.ChatMemberUpdated):
                 await bot.ban_chat_member(chat_id = message.chat.id,user_id=new.user.id)
                 vFailedMessage = "未完成验证，已Ban!\nBanned becasue of Verification TimeOut!\n请私聊管理员处理!\nPlease PM Admins to remove the restriction!"
                 send_res = await bot.send_message(message.chat.id, user_link(message.from_user)+vFailedMessage, parse_mode='HTML')
-                await bot.send_message(new.user.id, user_link(message.from_user)+vFailedMessage, parse_mode='HTML')
+                await bot.send_message(message.chat.id, user_link(message.from_user)+vFailedMessage, parse_mode='HTML')
                 await asyncio.sleep(15)
                 await bot.delete_message(chat_id = message.chat.id,message_id = send_ver.message_id)
                 break
